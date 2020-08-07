@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import Alamofire
 
 class ViewController: UIViewController {
     
@@ -24,6 +25,30 @@ class ViewController: UIViewController {
 //        videoListCollectionView.register(VideoListCell.self, forCellWithReuseIdentifier: cellId)
         
         videoListCollectionView.register(UINib(nibName: "VideoListCell", bundle: nil), forCellWithReuseIdentifier: cellId)
+        
+        
+        
+        //Alamofireの情報
+        let urlString = "https://www.googleapis.com/youtube/v3/search?q=lebronjames&key=AIzaSyBS-bPWbEx2wTppybswbyx77wv9yVTutLY&part=snippet"
+        
+        let request = AF.request(urlString)
+        
+        request.responseJSON { (response) in
+            
+            //tryを入れる場合は、do,try catchを入れないといけない
+            do {
+                guard let data = response.data else { return }
+                let decode = JSONDecoder()
+                let video = try decode.decode(Video.self, from: data)
+                print("video: " , video.items.count)
+            } catch {
+                print("変換に失敗しました。： ", error)
+            }
+            
+            //response内容を表示
+            print("response: ", response)
+        }
+        
     }
 
 
