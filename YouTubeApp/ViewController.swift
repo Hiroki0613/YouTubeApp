@@ -13,7 +13,7 @@ class ViewController: UIViewController {
     
     private let cellId = "cellId"
     private var videoItems = [Item]()
-
+    
     
     @IBOutlet var videoListCollectionView: UICollectionView!
     
@@ -23,75 +23,39 @@ class ViewController: UIViewController {
         videoListCollectionView.dataSource = self
         
         //どのクラスのcollectionViewCellを使うかを決められる
-//        videoListCollectionView.register(VideoListCell.self, forCellWithReuseIdentifier: cellId)
+        //        videoListCollectionView.register(VideoListCell.self, forCellWithReuseIdentifier: cellId)
         
         videoListCollectionView.register(UINib(nibName: "VideoListCell", bundle: nil), forCellWithReuseIdentifier: cellId)
         
         fetchYouTubeSearchInfo()
         
-        
-
-        
     }
     
     private func fetchYouTubeSearchInfo() {
-        //Alamofireの情報
-        let urlString = "https://www.googleapis.com/youtube/v3/search?q=lebronjames&key=AIzaSyBS-bPWbEx2wTppybswbyx77wv9yVTutLY&part=snippet"
+        let params = ["q": "lebronjames"]
         
-        let request = AF.request(urlString)
-        
-        request.responseJSON { (response) in
+        APIRequest.shared.request(path: .search, params: params, type: Video.self) { (video) in
             
-            //tryを入れる場合は、do,try catchを入れないといけない
-            do {
-                guard let data = response.data else { return }
-                let decode = JSONDecoder()
-                let video = try decode.decode(Video.self, from: data)
-                self.videoItems = video.items
-                
-                let id = self.videoItems[0].snippet.channelId
-                self.fetchYouTubeChannelInfo(id: id)
-                
-            } catch {
-                print("変換に失敗しました。： ", error)
-            }
-            
-//            //response内容を表示
-            //            print("response: ", response)
+            self.videoItems = video.items
+            let id = self.videoItems[0].snippet.channelId
+            self.fetchYouTubeChannelInfo(id: id)
         }
+        
     }
     
     private func fetchYouTubeChannelInfo(id: String) {
-        //Alamofireの情報
-        let urlString = "https://www.googleapis.com/youtube/v3/channels?key=AIzaSyBS-bPWbEx2wTppybswbyx77wv9yVTutLY&part=snippet&id=\(id)"
+        let params = [
+            "id": id
+        ]
         
-        let request = AF.request(urlString)
-        
-        request.responseJSON { (response) in
-            
-            //tryを入れる場合は、do,try catchを入れないといけない
-            do {
-                guard let data = response.data else { return }
-                let decode = JSONDecoder()
-                let channel = try decode.decode(Channel.self, from: data)
-//                self.videoItems = video.items
-                self.videoItems.forEach { (item) in
-                    item.channel = channel
-                }
-                
-                
-                //このタイミングでcollectionViewをリロードしておくと、cellに情報が入る。
-                self.videoListCollectionView.reloadData()
-            } catch {
-                print("変換に失敗しました。： ", error)
+        APIRequest.shared.request(path: .channels, params: params, type: Channel.self) { (channel) in
+            self.videoItems.forEach { (item) in
+                item.channel = channel
             }
-            
-            //            //response内容を表示
-            //            print("response: ", response)
+            self.videoListCollectionView.reloadData()
         }
     }
     
-
 }
 
 
