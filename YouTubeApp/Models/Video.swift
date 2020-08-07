@@ -16,6 +16,7 @@ class Video: Decodable {
 
 //階層でクラスを分ける
 class Item: Decodable {
+    var channel: Channel?
     let snippet: Snippet
 }
 
