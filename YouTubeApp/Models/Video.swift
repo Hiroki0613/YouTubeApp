@@ -8,6 +8,7 @@
 
 import Foundation
 
+
 //YouTubeのプロパティを設定する(必要な情報のみ)
 class Video: Decodable {
     let kind: String

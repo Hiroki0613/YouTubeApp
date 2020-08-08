@@ -13,7 +13,9 @@ class ViewController: UIViewController {
     
     @IBOutlet var profileImgeView: UIImageView!
     @IBOutlet var videoListCollectionView: UICollectionView!
-    
+    @IBOutlet var headerView: UIView!
+    @IBOutlet var headerHeightConstraint: NSLayoutConstraint!
+    @IBOutlet var headerTopConstraint: NSLayoutConstraint!
     
     private let cellId = "cellId"
     private var videoItems = [Item]()
@@ -58,6 +60,11 @@ class ViewController: UIViewController {
             }
             self.videoListCollectionView.reloadData()
         }
+    }
+    
+    //スクロール情報を取得する
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        print("scrollView.contentOffset: ", scrollView.contentOffset)
     }
     
 }

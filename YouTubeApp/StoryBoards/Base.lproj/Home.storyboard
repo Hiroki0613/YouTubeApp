@@ -105,6 +105,9 @@
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                     </view>
                     <connections>
+                        <outlet property="headerHeightConstraint" destination="ZrO-7s-jGl" id="ier-8w-yfQ"/>
+                        <outlet property="headerTopConstraint" destination="aHh-CW-TGH" id="fNz-k0-GxN"/>
+                        <outlet property="headerView" destination="zs8-ch-3m6" id="eXQ-iX-ATo"/>
                         <outlet property="profileImgeView" destination="MLt-u5-X8H" id="qEd-HC-ixL"/>
                         <outlet property="videoListCollectionView" destination="eIq-oG-nsS" id="C54-5X-jQH"/>
                     </connections>

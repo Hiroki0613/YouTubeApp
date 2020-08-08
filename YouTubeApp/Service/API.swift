@@ -28,7 +28,7 @@ class API {
         let url = baseUrl + path + "?"
         
         var params = params
-        params["key"] = "AIzaSyBS-bPWbEx2wTppybswbyx77wv9yVTutLY"
+        params["key"] = APIInformation.APIString
         params["part"] = "snippet"
         
         //        let params = [
