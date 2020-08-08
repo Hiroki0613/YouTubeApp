@@ -17,6 +17,9 @@ class ViewController: UIViewController {
     @IBOutlet var headerHeightConstraint: NSLayoutConstraint!
     @IBOutlet var headerTopConstraint: NSLayoutConstraint!
     
+    private var prevContentOffset: CGPoint = .init(x: 0, y: 0)
+    private let headerMoveHeight: CGFloat = 7
+    
     private let cellId = "cellId"
     private var videoItems = [Item]()
     
@@ -62,9 +65,66 @@ class ViewController: UIViewController {
         }
     }
     
-    //スクロール情報を取得する
+    //スクロール情報を取得する,header画面をスクロールして押し出したり、押し戻したりする
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        print("scrollView.contentOffset: ", scrollView.contentOffset)
+        //スクロールの0.5秒前の情報を取得することで、上にスクロールしているのか、下にスクロールしているのかがわかる。
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+            self.prevContentOffset = scrollView.contentOffset
+        }
+        
+        //一番下にスクロールした場合に、アニメーションを止める。位置からindexPathを取得する
+        guard let presentIndexPath = videoListCollectionView.indexPathForItem(at: scrollView.contentOffset) else { return }
+        
+        if scrollView.contentOffset.y < 0 { return }
+        
+        //indexPath(0からスタート)が一番下の時,その一つ前の状態でアニメーションを止めたい
+        if presentIndexPath.row >= videoItems.count - 1 - 1 { return }
+        
+        //headerViewのalphaを宣言
+        let alphaRatio = 1 / headerHeightConstraint.constant
+        
+        //下へスクロール
+        if self.prevContentOffset.y < scrollView.contentOffset.y {
+            if headerTopConstraint.constant <= -headerHeightConstraint.constant { return }
+            headerTopConstraint.constant -= headerMoveHeight
+            headerView.alpha -= alphaRatio * headerMoveHeight
+            
+        //上へスクロール
+        } else if self.prevContentOffset.y > scrollView.contentOffset.y {
+            if headerTopConstraint.constant >= 0 { return }
+            headerTopConstraint.constant += headerMoveHeight
+            headerView.alpha += alphaRatio * headerMoveHeight
+        }
+        
+        print("self.prevContentOffset:  ",self.prevContentOffset," scrollView.contentOffset: ",scrollView.contentOffset)
+    }
+    
+    func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
+        //スクロールで指をピタッと止めたときだけを呼び出す。
+        if !decelerate {
+            headerViewEndAnimation()
+        }
+    }
+    
+    func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
+        headerViewEndAnimation()
+    }
+    
+    
+    private func headerViewEndAnimation() {
+        if headerTopConstraint.constant < -headerHeightConstraint.constant / 2 {
+            UIView.animate(withDuration: 0.2, delay: 0, usingSpringWithDamping: 0.9, initialSpringVelocity: 0.8, options: [], animations: {
+                self.headerTopConstraint.constant = -self.headerHeightConstraint.constant
+                self.headerView.alpha = 0
+                self.view.layoutIfNeeded()
+            })
+        } else {
+            UIView.animate(withDuration: 0.2, delay: 0, usingSpringWithDamping: 0.9, initialSpringVelocity: 0.8, options: [], animations: {
+                self.headerTopConstraint.constant = 0
+                self.headerView.alpha = 1
+                self.view.layoutIfNeeded()
+            })
+        }
     }
     
 }
