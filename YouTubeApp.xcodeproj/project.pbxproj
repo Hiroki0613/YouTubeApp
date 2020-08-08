@@ -27,6 +27,9 @@
 		7F57489124DE52C000D0BB4F /* Inbox.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 7F57489024DE52C000D0BB4F /* Inbox.storyboard */; };
 		7F57489324DE52EB00D0BB4F /* Library.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 7F57489224DE52EB00D0BB4F /* Library.storyboard */; };
 		7F57489524DE561700D0BB4F /* APIString.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F57489424DE561700D0BB4F /* APIString.swift */; };
+		7F57489724DE68B400D0BB4F /* AttentionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F57489624DE68B400D0BB4F /* AttentionCell.swift */; };
+		7F57489924DE6EB200D0BB4F /* AttentionCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F57489824DE6EB200D0BB4F /* AttentionCollectionViewCell.swift */; };
+		7F57489B24DE6EFF00D0BB4F /* AttentionCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7F57489A24DE6EFF00D0BB4F /* AttentionCollectionViewCell.xib */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -52,6 +55,9 @@
 		7F57489024DE52C000D0BB4F /* Inbox.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Inbox.storyboard; sourceTree = "<group>"; };
 		7F57489224DE52EB00D0BB4F /* Library.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Library.storyboard; sourceTree = "<group>"; };
 		7F57489424DE561700D0BB4F /* APIString.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIString.swift; sourceTree = "<group>"; };
+		7F57489624DE68B400D0BB4F /* AttentionCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AttentionCell.swift; sourceTree = "<group>"; };
+		7F57489824DE6EB200D0BB4F /* AttentionCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AttentionCollectionViewCell.swift; sourceTree = "<group>"; };
+		7F57489A24DE6EFF00D0BB4F /* AttentionCollectionViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = AttentionCollectionViewCell.xib; sourceTree = "<group>"; };
 		A7FA41AE20A24A6882F13B45 /* Pods-YouTubeApp.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-YouTubeApp.debug.xcconfig"; path = "Target Support Files/Pods-YouTubeApp/Pods-YouTubeApp.debug.xcconfig"; sourceTree = "<group>"; };
 		F18DDF3B1670FD6DB864FAC3 /* Pods_YouTubeApp.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_YouTubeApp.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -126,6 +132,8 @@
 			isa = PBXGroup;
 			children = (
 				7F57487624DD685600D0BB4F /* VideoListCell.swift */,
+				7F57489624DE68B400D0BB4F /* AttentionCell.swift */,
+				7F57489824DE6EB200D0BB4F /* AttentionCollectionViewCell.swift */,
 			);
 			path = Cells;
 			sourceTree = "<group>";
@@ -134,6 +142,7 @@
 			isa = PBXGroup;
 			children = (
 				7F57487924DD690600D0BB4F /* VideoListCell.xib */,
+				7F57489A24DE6EFF00D0BB4F /* AttentionCollectionViewCell.xib */,
 			);
 			path = Xibs;
 			sourceTree = "<group>";
@@ -249,6 +258,7 @@
 				7F57486E24DD04FC00D0BB4F /* LaunchScreen.storyboard in Resources */,
 				7F57488F24DE529D00D0BB4F /* Channel.storyboard in Resources */,
 				7F57487A24DD690600D0BB4F /* VideoListCell.xib in Resources */,
+				7F57489B24DE6EFF00D0BB4F /* AttentionCollectionViewCell.xib in Resources */,
 				7F57486B24DD04FC00D0BB4F /* Assets.xcassets in Resources */,
 				7F57489324DE52EB00D0BB4F /* Library.storyboard in Resources */,
 				7F57488424DE434B00D0BB4F /* BaseTabBar.storyboard in Resources */,
@@ -316,7 +326,9 @@
 				7F57486224DD04F500D0BB4F /* AppDelegate.swift in Sources */,
 				7F57486424DD04F500D0BB4F /* SceneDelegate.swift in Sources */,
 				7F57487D24DD755A00D0BB4F /* Video.swift in Sources */,
+				7F57489724DE68B400D0BB4F /* AttentionCell.swift in Sources */,
 				7F57489524DE561700D0BB4F /* APIString.swift in Sources */,
+				7F57489924DE6EB200D0BB4F /* AttentionCollectionViewCell.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

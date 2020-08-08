@@ -21,10 +21,18 @@ class ViewController: UIViewController {
     private let headerMoveHeight: CGFloat = 7
     
     private let cellId = "cellId"
+    private let attentionCellId = "atentionCellId"
     private var videoItems = [Item]()
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        setupViews()
+        fetchYouTubeSearchInfo()
+    }
+    
+    
+    private func setupViews() {
         videoListCollectionView.delegate = self
         videoListCollectionView.dataSource = self
         
@@ -33,10 +41,8 @@ class ViewController: UIViewController {
         
         //どのクラスのcollectionViewCellを使うかを決められる
         //        videoListCollectionView.register(VideoListCell.self, forCellWithReuseIdentifier: cellId)
-        
         videoListCollectionView.register(UINib(nibName: "VideoListCell", bundle: nil), forCellWithReuseIdentifier: cellId)
-        
-        fetchYouTubeSearchInfo()
+        videoListCollectionView.register(AttentionCell.self, forCellWithReuseIdentifier: attentionCellId)
         
     }
     
@@ -65,13 +71,43 @@ class ViewController: UIViewController {
         }
     }
     
+    
+    
+    
+    private func headerViewEndAnimation() {
+        if headerTopConstraint.constant < -headerHeightConstraint.constant / 2 {
+            UIView.animate(withDuration: 0.2, delay: 0, usingSpringWithDamping: 0.9, initialSpringVelocity: 0.8, options: [], animations: {
+                self.headerTopConstraint.constant = -self.headerHeightConstraint.constant
+                self.headerView.alpha = 0
+                self.view.layoutIfNeeded()
+            })
+        } else {
+            UIView.animate(withDuration: 0.2, delay: 0, usingSpringWithDamping: 0.9, initialSpringVelocity: 0.8, options: [], animations: {
+                self.headerTopConstraint.constant = 0
+                self.headerView.alpha = 1
+                self.view.layoutIfNeeded()
+            })
+        }
+    }
+    
+}
+
+
+// MARK: - ScrollViewのdelegateメソッド
+extension ViewController {
+    
+    //scrollViewがscrollした時に呼ばれるメソッド
     //スクロール情報を取得する,header画面をスクロールして押し出したり、押し戻したりする
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        headerAnimation(scrollView: scrollView)
+    }
+    
+    
+    private func headerAnimation(scrollView: UIScrollView) {
         //スクロールの0.5秒前の情報を取得することで、上にスクロールしているのか、下にスクロールしているのかがわかる。
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
             self.prevContentOffset = scrollView.contentOffset
         }
-        
         //一番下にスクロールした場合に、アニメーションを止める。位置からindexPathを取得する
         guard let presentIndexPath = videoListCollectionView.indexPathForItem(at: scrollView.contentOffset) else { return }
         
@@ -95,10 +131,9 @@ class ViewController: UIViewController {
             headerTopConstraint.constant += headerMoveHeight
             headerView.alpha += alphaRatio * headerMoveHeight
         }
-        
-        print("self.prevContentOffset:  ",self.prevContentOffset," scrollView.contentOffset: ",scrollView.contentOffset)
     }
     
+    //scrollViewのscrollがピタッと止まった時に呼ばれる
     func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
         //スクロールで指をピタッと止めたときだけを呼び出す。
         if !decelerate {
@@ -106,52 +141,58 @@ class ViewController: UIViewController {
         }
     }
     
+    //scrollViewが惰性で動いて、止まった時に呼ばれる
     func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
         headerViewEndAnimation()
     }
-    
-    
-    private func headerViewEndAnimation() {
-        if headerTopConstraint.constant < -headerHeightConstraint.constant / 2 {
-            UIView.animate(withDuration: 0.2, delay: 0, usingSpringWithDamping: 0.9, initialSpringVelocity: 0.8, options: [], animations: {
-                self.headerTopConstraint.constant = -self.headerHeightConstraint.constant
-                self.headerView.alpha = 0
-                self.view.layoutIfNeeded()
-            })
-        } else {
-            UIView.animate(withDuration: 0.2, delay: 0, usingSpringWithDamping: 0.9, initialSpringVelocity: 0.8, options: [], animations: {
-                self.headerTopConstraint.constant = 0
-                self.headerView.alpha = 1
-                self.view.layoutIfNeeded()
-            })
-        }
-    }
-    
 }
 
 
+// MARK: - UICollectionViewDelegate,UICollectionViewDataSource,UICollectionViewDelegateFlowLayout
 //UICollectionViewDelegateFlowLayoutはセルの大きさを決めてくれるデリゲート
 extension ViewController: UICollectionViewDelegate,UICollectionViewDataSource,UICollectionViewDelegateFlowLayout {
     
-    
     //コレクションビューの個別のセルの大きさを決めることができる。
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        
         //セルの横幅と同じ長さを縦にも適用
         let width = self.view.frame.width
         
-        //セルの高さを記載している
-        return .init(width: width, height: width)
+        if indexPath.row == 2 {
+            //セルの高さを記載している
+            return .init(width: width, height: 200)
+        } else {
+            //セルの高さを記載している
+            return .init(width: width, height: width)
+        }
     }
     
+    
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return videoItems.count
+        //横スクロールのコレクションビューを一つ追加するため、+1をする
+        return videoItems.count + 1
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = videoListCollectionView.dequeueReusableCell(withReuseIdentifier: cellId, for: indexPath) as! VideoListCell
-        cell.videoItem = videoItems[indexPath.row]
-        return cell
+        
+        if indexPath.row == 2 {
+            let cell = videoListCollectionView.dequeueReusableCell(withReuseIdentifier: attentionCellId, for: indexPath) as! AttentionCell
+            cell.videoItems = self.videoItems
+            return cell
+            
+        } else {
+            let cell = videoListCollectionView.dequeueReusableCell(withReuseIdentifier: cellId, for: indexPath) as! VideoListCell
+            
+            if self.videoItems.count == 0 { return cell}
+            
+            //indexPath.row == 2の時には、上の処理で呼ばれる分だけ数が合わなくなる。そのための切り分けをする。
+            if indexPath.row > 2 {
+                cell.videoItem = videoItems[indexPath.row - 1]
+            } else {
+                cell.videoItem = videoItems[indexPath.row]
+            }
+            
+            return cell
+        }
     }
     
     
