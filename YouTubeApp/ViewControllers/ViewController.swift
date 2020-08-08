@@ -11,16 +11,20 @@ import Alamofire
 
 class ViewController: UIViewController {
     
+    @IBOutlet var profileImgeView: UIImageView!
+    @IBOutlet var videoListCollectionView: UICollectionView!
+    
+    
     private let cellId = "cellId"
     private var videoItems = [Item]()
-    
-    
-    @IBOutlet var videoListCollectionView: UICollectionView!
     
     override func viewDidLoad() {
         super.viewDidLoad()
         videoListCollectionView.delegate = self
         videoListCollectionView.dataSource = self
+        
+        
+        profileImgeView.layer.cornerRadius = 20
         
         //どのクラスのcollectionViewCellを使うかを決められる
         //        videoListCollectionView.register(VideoListCell.self, forCellWithReuseIdentifier: cellId)
@@ -34,7 +38,7 @@ class ViewController: UIViewController {
     private func fetchYouTubeSearchInfo() {
         let params = ["q": "lebronjames"]
         
-        APIRequest.shared.request(path: .search, params: params, type: Video.self) { (video) in
+        API.shared.request(path: .search, params: params, type: Video.self) { (video) in
             
             self.videoItems = video.items
             let id = self.videoItems[0].snippet.channelId
@@ -48,7 +52,7 @@ class ViewController: UIViewController {
             "id": id
         ]
         
-        APIRequest.shared.request(path: .channels, params: params, type: Channel.self) { (channel) in
+        API.shared.request(path: .channels, params: params, type: Channel.self) { (channel) in
             self.videoItems.forEach { (item) in
                 item.channel = channel
             }

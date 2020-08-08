@@ -9,7 +9,7 @@
 import Foundation
 import Alamofire
 
-class APIRequest {
+class API {
           
     enum PathType: String {
         case search
@@ -17,7 +17,7 @@ class APIRequest {
     }
     
     //シングルトン
-    static var shared = APIRequest()
+    static let shared = API()
     
     private let baseUrl = "https://www.googleapis.com/youtube/v3/"
     
@@ -41,17 +41,20 @@ class APIRequest {
         
         request.responseJSON { (response) in
             
-            //tryを入れる場合は、do,try catchを入れないといけない
-            do {
-                guard let data = response.data else { return }
-                let decode = JSONDecoder()
-                let value = try decode.decode(T.self, from: data)
-                
-                completion(value)
-            } catch {
-                print("変換に失敗しました。： ", error)
+            guard let statusCode = response.response?.statusCode else { return }
+            //HTTPレスポンスの数が300を超えている場合は処理を中止
+            if statusCode <= 300 {
+                //tryを入れる場合は、do,try catchを入れないといけない
+                do {
+                    guard let data = response.data else { return }
+                    let decoder = JSONDecoder()
+                    let value = try decoder.decode(T.self, from: data)
+                    
+                    completion(value)
+                } catch {
+                    print("変換に失敗しました。： ", error)
+                }
             }
-            
             //            //response内容を表示
             //            print("response: ", response)
         }
