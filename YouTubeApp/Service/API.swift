@@ -50,6 +50,7 @@ class API {
                     let decoder = JSONDecoder()
                     let value = try decoder.decode(T.self, from: data)
                     
+                    //ここでのvalueはT(Decodable)を指します。
                     completion(value)
                 } catch {
                     print("変換に失敗しました。： ", error)
