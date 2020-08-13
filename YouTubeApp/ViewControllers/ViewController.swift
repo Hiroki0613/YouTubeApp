@@ -49,6 +49,7 @@ class ViewController: UIViewController {
     private func fetchYouTubeSearchInfo() {
         let params = ["q": "lebronjames"]
         
+        //requestで定義したT(Decodable)が入ります
         API.shared.request(path: .search, params: params, type: Video.self) { (video) in
             
             self.videoItems = video.items
