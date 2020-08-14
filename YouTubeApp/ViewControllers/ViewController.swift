@@ -175,6 +175,8 @@ extension ViewController: UICollectionViewDelegate,UICollectionViewDataSource,UI
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         
+        
+        //三番目のセルに、違うセルを挿入する。
         if indexPath.row == 2 {
             let cell = videoListCollectionView.dequeueReusableCell(withReuseIdentifier: attentionCellId, for: indexPath) as! AttentionCell
             cell.videoItems = self.videoItems
