@@ -9,7 +9,7 @@
 import UIKit
 import Alamofire
 
-class ViewController: UIViewController {
+class VideoListViewController: UIViewController {
     
     @IBOutlet var profileImgeView: UIImageView!
     @IBOutlet var videoListCollectionView: UICollectionView!
@@ -95,7 +95,7 @@ class ViewController: UIViewController {
 
 
 // MARK: - ScrollViewのdelegateメソッド
-extension ViewController {
+extension VideoListViewController {
     
     //scrollViewがscrollした時に呼ばれるメソッド
     //スクロール情報を取得する,header画面をスクロールして押し出したり、押し戻したりする
@@ -151,7 +151,15 @@ extension ViewController {
 
 // MARK: - UICollectionViewDelegate,UICollectionViewDataSource,UICollectionViewDelegateFlowLayout
 //UICollectionViewDelegateFlowLayoutはセルの大きさを決めてくれるデリゲート
-extension ViewController: UICollectionViewDelegate,UICollectionViewDataSource,UICollectionViewDelegateFlowLayout {
+extension VideoListViewController: UICollectionViewDelegate,UICollectionViewDataSource,UICollectionViewDelegateFlowLayout {
+    
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        print("didSelectItemAt")
+        
+        let videoViewController = UIStoryboard(name: "Video", bundle: nil).instantiateViewController(identifier: "VideoViewController") as VideoViewController
+        videoViewController.modalPresentationStyle = .fullScreen
+        self.present(videoViewController, animated: true, completion: nil)
+    }
     
     //コレクションビューの個別のセルの大きさを決めることができる。
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
